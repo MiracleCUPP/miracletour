@@ -25,8 +25,7 @@ import ManageNews from './pages/admin/ManageNews';
 import Applications from './pages/admin/Applications';
 import Settings from './pages/admin/Settings';
 
-// ── Охранник для всех /admin/* маршрутов ─────────────────────
-// Блокирует рендер до проверки сессии, исключает флеш контента
+// ── Protected Route ─────────────────────────────────────────────
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAdmin, isLoading } = useAuth();
 
@@ -81,20 +80,37 @@ const App: React.FC = () => {
 
   return (
     <AuthProvider>
-      <Router>
+      {/* ✅ ВАЖНО: basename для GitHub Pages */}
+      <Router basename="/miracletour">
         <ScrollToTop />
         <div className="min-h-screen bg-black">
           <Routes>
             {/* Admin Routes */}
             <Route path="/admin/login" element={<Login />} />
-            <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
+
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            >
               <Route path="tournaments" element={<ManageTournaments />} />
               <Route path="tournaments/:id" element={<ManageTournaments />} />
               <Route path="news" element={<ManageNews />} />
               <Route path="news/:id" element={<ManageNews />} />
               <Route path="applications" element={<Applications />} />
             </Route>
-            <Route path="/admin/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+
+            <Route
+              path="/admin/settings"
+              element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Public Routes */}
             <Route
